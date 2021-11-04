@@ -14,10 +14,12 @@ const StyledSelect = styled.select``;
 
 const Input = (props) => {
   const commonProps = {
+    ref: props.refCallback,
     name: props.name,
     type: props.type,
     value: props.value,
     onChange: props.onChange,
+    htmlAutocomplete: "off",
   };
   return (
     <StyledFlexWrapper>

@@ -54,6 +54,8 @@ const Form = () => {
     (o, key) => Object.assign(o, { [key.name]: "" }),
     {}
   );
+  // eslint-disable-next-line
+  let inputRefs = [];
   const [formData, setFormData] = useState(initialFormData);
   const [notification, setNotication] = useState({
     show: false,
@@ -84,16 +86,39 @@ const Form = () => {
     showNotification(result);
     setLoading(false);
   };
+
+  const setRef = (fieldIndex, el) => {
+    inputRefs[fieldIndex] = el;
+  };
+
+  const handleKeyPress = (index, e) => {
+    e.preventDefault();
+    console.log(e.key, index);
+    if (e.key === "ArrowUp") {
+      if (index - 1 >= 0) {
+        inputRefs[index - 1].focus();
+      }
+    } else if (e.key === "ArrowDown") {
+      if (index + 1 <= inputRefs.length - 1) {
+        inputRefs[index + 1].focus();
+      }
+    }
+  };
   return (
     <StyledForm>
       <h2>{msg.fillForm}</h2>
-      {fields.map((fieldProps) => (
-        <Input
+      {fields.map((fieldProps, index) => (
+        <div
           key={`field-${fieldProps.name}`}
-          {...fieldProps}
-          onChange={(e) => handleChange(e.target.name, e.target.value)}
-          value={formData[fieldProps.name]}
-        />
+          onKeyUp={(e) => handleKeyPress(index, e)}
+        >
+          <Input
+            {...fieldProps}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            value={formData[fieldProps.name]}
+            refCallback={(el) => setRef(index, el)}
+          />
+        </div>
       ))}
       <StyledButton onClick={(e) => handleSend(e)}>{msg.send}</StyledButton>
       <code>{JSON.stringify(formData)}</code>
