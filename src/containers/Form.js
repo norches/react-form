@@ -38,9 +38,9 @@ const fields = [
   },
   { name: "email", type: "email", label: msg.email },
   { name: "address", type: "text", label: msg.address },
+  { name: "about", type: "textarea", label: msg.about },
   { name: "degree", type: "text", label: msg.degree },
   { name: "company", type: "text", label: msg.company },
-  { name: "about", type: "textarea", label: msg.about },
 ];
 /* [
   ({ id: 10, color: "red" },
@@ -92,15 +92,18 @@ const Form = () => {
   };
 
   const handleKeyPress = (index, e) => {
+    console.log(e.target.type);
     e.preventDefault();
-    console.log(e.key, index);
-    if (e.key === "ArrowUp") {
-      if (index - 1 >= 0) {
-        inputRefs[index - 1].focus();
-      }
-    } else if (e.key === "ArrowDown") {
-      if (index + 1 <= inputRefs.length - 1) {
-        inputRefs[index + 1].focus();
+    e.stopPropagation();
+    if (e.target.type !== "textarea") {
+      if (e.key === "ArrowUp") {
+        if (index - 1 >= 0) {
+          inputRefs[index - 1].focus();
+        }
+      } else if (e.key === "ArrowDown" || e.key === "Enter") {
+        if (index + 1 <= inputRefs.length - 1) {
+          inputRefs[index + 1].focus();
+        }
       }
     }
   };
@@ -120,7 +123,9 @@ const Form = () => {
           />
         </div>
       ))}
-      <StyledButton onClick={(e) => handleSend(e)}>{msg.send}</StyledButton>
+      <StyledButton type="button" onClick={(e) => handleSend(e)}>
+        {msg.send}
+      </StyledButton>
       <code>{JSON.stringify(formData)}</code>
       {loading && <div>{msg.loading}</div>}
       <NotificationContainer show={notification.show}>
