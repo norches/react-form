@@ -92,7 +92,6 @@ const Form = () => {
   };
 
   const handleKeyPress = (index, e) => {
-    console.log(e.target.type);
     e.preventDefault();
     e.stopPropagation();
     if (e.target.type !== "textarea") {
